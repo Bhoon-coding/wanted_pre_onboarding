@@ -26,6 +26,7 @@ class WeatherViewController: UIViewController {
         
         configureUI()
         configureCollectionView()
+        URLSessionManager.shared.getCurrentWeather(cityName: "suwon")
     }
 
     // MARK: - Methods
@@ -46,7 +47,8 @@ class WeatherViewController: UIViewController {
     private func configureCollectionView() {
         weatherCollectionView.dataSource = self
         weatherCollectionView.delegate = self
-        weatherCollectionView.register(WeatherCollectionViewCell.self, forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
+        weatherCollectionView.register(WeatherCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
     }
     // MARK: - @objc
 

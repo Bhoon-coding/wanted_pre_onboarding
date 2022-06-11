@@ -35,6 +35,11 @@ struct WeatherInformation: Codable {
     let wind: Wind
     let name: String
     
+    enum CodingKeys: String, CodingKey {
+        case weather
+        case temp = "main"
+        case wind, name
+    }
 }
 
 struct Weather: Codable {
@@ -49,7 +54,7 @@ struct Temp: Codable {
     let tempMax: Double
     let pressure: Int
     let humidity: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case temp
         case feelsLike = "feels_like"
