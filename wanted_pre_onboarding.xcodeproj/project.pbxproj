@@ -101,11 +101,10 @@
 		E116048F2854701100977EF5 /* wanted_pre_onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				E1F3A2B72854D5DB0029A23D /* ViewController */,
 				E1F3A2B42854D54D0029A23D /* Model */,
 				E11604902854701100977EF5 /* AppDelegate.swift */,
 				E11604922854701100977EF5 /* SceneDelegate.swift */,
-				E11604942854701100977EF5 /* WeatherViewController.swift */,
-				E11604C02854825E00977EF5 /* WeatherCollectionViewCell.swift */,
 				E11604992854701400977EF5 /* Assets.xcassets */,
 				E116049B2854701400977EF5 /* LaunchScreen.storyboard */,
 				E116049E2854701400977EF5 /* Info.plist */,
@@ -136,6 +135,15 @@
 				E1F3A2B52854D59E0029A23D /* WeatherInformation.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		E1F3A2B72854D5DB0029A23D /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				E11604C02854825E00977EF5 /* WeatherCollectionViewCell.swift */,
+				E11604942854701100977EF5 /* WeatherViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
