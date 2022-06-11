@@ -15,6 +15,7 @@
 		E11604A82854701500977EF5 /* wanted_pre_onboardingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11604A72854701500977EF5 /* wanted_pre_onboardingTests.swift */; };
 		E11604B22854701500977EF5 /* wanted_pre_onboardingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11604B12854701500977EF5 /* wanted_pre_onboardingUITests.swift */; };
 		E11604B42854701500977EF5 /* wanted_pre_onboardingUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11604B32854701500977EF5 /* wanted_pre_onboardingUITestsLaunchTests.swift */; };
+		E11604C12854825E00977EF5 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11604C02854825E00977EF5 /* WeatherCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		E11604AD2854701500977EF5 /* wanted_pre_onboardingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = wanted_pre_onboardingUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E11604B12854701500977EF5 /* wanted_pre_onboardingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wanted_pre_onboardingUITests.swift; sourceTree = "<group>"; };
 		E11604B32854701500977EF5 /* wanted_pre_onboardingUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = wanted_pre_onboardingUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		E11604C02854825E00977EF5 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				E11604902854701100977EF5 /* AppDelegate.swift */,
 				E11604922854701100977EF5 /* SceneDelegate.swift */,
 				E11604942854701100977EF5 /* WeatherViewController.swift */,
+				E11604C02854825E00977EF5 /* WeatherCollectionViewCell.swift */,
 				E11604992854701400977EF5 /* Assets.xcassets */,
 				E116049B2854701400977EF5 /* LaunchScreen.storyboard */,
 				E116049E2854701400977EF5 /* Info.plist */,
@@ -255,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E11604952854701100977EF5 /* WeatherViewController.swift in Sources */,
+				E11604C12854825E00977EF5 /* WeatherCollectionViewCell.swift in Sources */,
 				E11604912854701100977EF5 /* AppDelegate.swift in Sources */,
 				E11604932854701100977EF5 /* SceneDelegate.swift in Sources */,
 			);
