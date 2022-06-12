@@ -6,7 +6,7 @@
 //
 
 /*
- TODO: [] 첫번째 페이지 데이터
+ TODO: [x] 첫번째 페이지 데이터
  도시이름: name
  날씨 아이콘: weather.icon
  현재기온: main.temp
@@ -14,7 +14,7 @@
  */
 
 /*
- TODO: [] 두번째 페이지 데이터
+ TODO: [x] 두번째 페이지 데이터
  도시이름: name
  날씨아이콘: weather.icon
  날씨설명: weather.description

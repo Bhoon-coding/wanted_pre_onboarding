@@ -10,6 +10,9 @@ import UIKit
 class WeatherViewController: UIViewController {
 
     // MARK: - Properties
+    
+    let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chooncheon"]
+    
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
@@ -26,10 +29,11 @@ class WeatherViewController: UIViewController {
         
         configureUI()
         configureCollectionView()
-        URLSessionManager.shared.getCurrentWeather(cityName: "suwon")
     }
 
     // MARK: - Methods
+    
+
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -41,7 +45,6 @@ class WeatherViewController: UIViewController {
             weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
             weatherCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
-        
     }
     
     private func configureCollectionView() {
@@ -59,13 +62,13 @@ class WeatherViewController: UIViewController {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return cities.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as? WeatherCollectionViewCell else { return WeatherCollectionViewCell() }
-        
-        cell.configureCell()
+    
+        cell.getCurrentWeather(city: cities[indexPath.row])
         
         return cell
     }
