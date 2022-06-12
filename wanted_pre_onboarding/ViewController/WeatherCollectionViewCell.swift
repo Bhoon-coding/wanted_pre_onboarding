@@ -62,24 +62,11 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Methods
     
-    func getCurrentWeather(city: String) {
-        URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
-            switch response {
-            case .success(let weatherData):
-                DispatchQueue.main.async {
-                    self.configureCell(weatherInformation: weatherData as! WeatherInformation)
-                }
-                
-            case .failure(let error):
-                print("current weather response failure: \(error.localizedDescription)")
-            }
-        }
-    }
     
     // TODO: [x]  파라미터에 날씨 데이터 넣기
-    func configureCell(weatherInformation: WeatherInformation) {
-        guard let iconCode = weatherInformation.weather.first?.icon,
-              let iconUrl = URL(string:    "http://api.openweathermap.org/img/wn/\(iconCode)@2x.png") else { return }
+    func configureCell(weatherOfCity: WeatherInformation) {
+        guard let iconCode = weatherOfCity.weather.first?.icon,
+              let iconUrl = URL(string:    "http://openweathermap.org/img/wn/\(iconCode)@2x.png") else { return }
         DispatchQueue.global().async { [weak self] in
             if let data = try? Data(contentsOf: iconUrl) {
                 if let image = UIImage(data: data) {
@@ -93,9 +80,9 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         contentView.layer.borderWidth = 1
         contentView.layer.cornerRadius = 16
         
-        cityLabel.text = weatherInformation.name
-        currentTemp.text = "\(Int(weatherInformation.temp.temp - 273.15))°C"
-        currentHumidity.text = "\(weatherInformation.temp.humidity)%"
+        cityLabel.text = weatherOfCity.name
+        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°C"
+        currentHumidity.text = "\(weatherOfCity.temp.humidity)%"
         
     }
     

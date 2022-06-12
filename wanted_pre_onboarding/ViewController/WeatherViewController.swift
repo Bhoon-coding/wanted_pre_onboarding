@@ -8,10 +8,12 @@
 import UIKit
 
 class WeatherViewController: UIViewController {
-
+    
     // MARK: - Properties
     
-    let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chooncheon"]
+    private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chooncheon"]
+    
+    private var weatherOfCity: [WeatherInformation] = []
     
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,11 +31,10 @@ class WeatherViewController: UIViewController {
         
         configureUI()
         configureCollectionView()
+        getCurrentWeather(cities: cities)
     }
-
-    // MARK: - Methods
     
-
+    // MARK: - Methods
     
     private func configureUI() {
         view.backgroundColor = .white
@@ -53,8 +54,31 @@ class WeatherViewController: UIViewController {
         weatherCollectionView.register(WeatherCollectionViewCell.self,
                                        forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
     }
+    
+    func getCurrentWeather(cities: [String]) {
+        
+        cities.forEach { city in
+            URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
+                switch response {
+                case .success(let weatherData):
+                    self.weatherOfCity.append(weatherData)
+                    DispatchQueue.main.async {
+                        if !self.weatherOfCity.isEmpty {
+                            self.weatherCollectionView.reloadData()
+                            dump(self.weatherOfCity)
+                        }
+                    }
+                    
+                case .failure(let error):
+                    print("current weather response failure: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+    }
+    
     // MARK: - @objc
-
+    
     
 }
 
@@ -62,13 +86,13 @@ class WeatherViewController: UIViewController {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return cities.count
+        return weatherOfCity.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as? WeatherCollectionViewCell else { return WeatherCollectionViewCell() }
-    
-        cell.getCurrentWeather(city: cities[indexPath.row])
+        
+        cell.configureCell(weatherOfCity: weatherOfCity[indexPath.row])
         
         return cell
     }
@@ -93,8 +117,8 @@ struct ViewControllerRepresentable: UIViewControllerRepresentable {
     }
     // makeui
     func makeUIViewController(context: Context) -> UIViewController {
-    // Preview를 보고자 하는 Viewcontroller 이름
-    // e.g.)
+        // Preview를 보고자 하는 Viewcontroller 이름
+        // e.g.)
         return WeatherViewController()
     }
 }
@@ -105,8 +129,8 @@ struct ViewController_Previews: PreviewProvider {
     static var previews: some View {
         // UIViewControllerRepresentable에 지정된 이름.
         ViewControllerRepresentable()
-
-// 테스트 해보고자 하는 기기
+        
+        // 테스트 해보고자 하는 기기
             .previewDevice("iPhone 11")
     }
 }
