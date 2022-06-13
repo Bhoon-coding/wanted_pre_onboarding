@@ -69,41 +69,107 @@ class WeatherDetailViewController: UIViewController {
         return label
     }()
     
-    private lazy var etcHorizontal: UIStackView = {
+    private lazy var etcHorizontalWrapper: UIStackView = {
         let stackView = UIStackView()
-        stackView.spacing = 8
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        return stackView
-    }()
-    private lazy var etcVerticalWrapper: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
         stackView.spacing = 8
         stackView.distribution = .fillEqually
-        stackView.alignment = .center
-        stackView.backgroundColor = .magenta
+        stackView.backgroundColor = .orange
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
-    private lazy var etcTitleLabel: UILabel = {
+    private lazy var pressureStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.backgroundColor = .magenta
+        stackView.spacing = 8
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var pressureTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "기압"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var pressureImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "dial.max")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var pressureDetailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "1011 hpa"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var windStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.backgroundColor = .magenta
+        stackView.spacing = 8
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var windTitleLabel: UILabel = {
         let label = UILabel()
         label.text = "풍속"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var etcImageView: UIImageView = {
+    private lazy var windImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "wind")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    private lazy var etcDetailLabel: UILabel = {
+    private lazy var windDetailLabel: UILabel = {
         let label = UILabel()
         label.text = "4 m/s"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var humidityStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.backgroundColor = .magenta
+        stackView.spacing = 8
+        stackView.distribution = .fillEqually
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()
+    
+    private lazy var humidityTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "습도"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var humidityImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "humidity.fill")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    private lazy var humidityDetailLabel: UILabel = {
+        let label = UILabel()
+        label.text = "60%"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -128,7 +194,6 @@ class WeatherDetailViewController: UIViewController {
         
         configureUI()
         configureNavigationBar()
-        
     }
     
     // MARK: - Methods
@@ -148,13 +213,35 @@ class WeatherDetailViewController: UIViewController {
          maxTempLabel,
          minTempLabel,
          feelTempLabel,
-         etcVerticalWrapper
+         etcHorizontalWrapper,
+         pressureStackView,
+         windStackView,
+         humidityStackView
         ].forEach { view.addSubview($0) }
         
-        [etcTitleLabel,
-         etcImageView,
-         etcDetailLabel
-        ].forEach { etcVerticalWrapper.addArrangedSubview($0) }
+        [pressureTitleLabel,
+         pressureImageView,
+         pressureDetailLabel].forEach {
+            pressureStackView.addArrangedSubview($0)
+        }
+        
+        [windTitleLabel,
+         windImageView,
+         windDetailLabel].forEach {
+            windStackView.addArrangedSubview($0)
+        }
+        
+        [humidityTitleLabel,
+         humidityImageView,
+         humidityDetailLabel].forEach {
+            humidityStackView.addArrangedSubview($0)
+        }
+        
+        [pressureStackView,
+         windStackView,
+         humidityStackView].forEach {
+            etcHorizontalWrapper.addArrangedSubview($0)
+        }
         
         NSLayoutConstraint.activate([
             wholeWrapper.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -165,7 +252,7 @@ class WeatherDetailViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             weatherIconImageView.topAnchor.constraint(equalTo: wholeWrapper.safeAreaLayoutGuide.topAnchor, constant: 60),
-            weatherIconImageView.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
+            weatherIconImageView.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
             weatherIconImageView.widthAnchor.constraint(equalToConstant: 140),
             weatherIconImageView.heightAnchor.constraint(equalToConstant: 140)
         ])
@@ -176,14 +263,14 @@ class WeatherDetailViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            tempWrapper.topAnchor.constraint(equalTo: weatherIconImageView.topAnchor),
-            tempWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
+            tempWrapper.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 40),
+            tempWrapper.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
             tempWrapper.widthAnchor.constraint(equalTo: weatherIconImageView.widthAnchor),
             tempWrapper.heightAnchor.constraint(equalTo: weatherIconImageView.heightAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            currentTempLabel.centerYAnchor.constraint(equalTo: weatherIconImageView.centerYAnchor),
+            currentTempLabel.centerYAnchor.constraint(equalTo: tempWrapper.centerYAnchor),
             currentTempLabel.leadingAnchor.constraint(equalTo: tempWrapper.leadingAnchor, constant: 16)
         ])
         
@@ -198,27 +285,37 @@ class WeatherDetailViewController: UIViewController {
         ])
         
         NSLayoutConstraint.activate([
-            feelTempLabel.topAnchor.constraint(equalTo: descriptionLabel.topAnchor),
+            feelTempLabel.topAnchor.constraint(equalTo: tempWrapper.bottomAnchor, constant: 16),
             feelTempLabel.centerXAnchor.constraint(equalTo: tempWrapper.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            etcVerticalWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
-            etcVerticalWrapper.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 40),
-            etcVerticalWrapper.widthAnchor.constraint(equalToConstant: 80),
-            etcVerticalWrapper.heightAnchor.constraint(equalToConstant: 140)
+            etcHorizontalWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
+            etcHorizontalWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
+            etcHorizontalWrapper.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 40),
+            etcHorizontalWrapper.heightAnchor.constraint(equalToConstant: 140)
         ])
         
         NSLayoutConstraint.activate([
-            etcTitleLabel.centerXAnchor.constraint(equalTo: etcVerticalWrapper.centerXAnchor)
+            pressureStackView.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
+            pressureStackView.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 40),
+            pressureStackView.widthAnchor.constraint(equalToConstant: 80),
+            pressureStackView.heightAnchor.constraint(equalToConstant: 140)
         ])
         
         NSLayoutConstraint.activate([
-        
+            pressureImageView.widthAnchor.constraint(equalToConstant: 40),
+            pressureImageView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
         NSLayoutConstraint.activate([
+            windImageView.widthAnchor.constraint(equalToConstant: 40),
+            windImageView.heightAnchor.constraint(equalToConstant: 40)
+        ])
         
+        NSLayoutConstraint.activate([
+            humidityImageView.widthAnchor.constraint(equalToConstant: 40),
+            humidityImageView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
     }
