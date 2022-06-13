@@ -98,7 +98,15 @@ extension WeatherViewController: UICollectionViewDataSource {
 extension WeatherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
+        let weatherInformation = weatherOfCity[indexPath.row]
+//        let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
         let weatherDetailVC = WeatherDetailViewController()
+        let backBarButtonItem = UIBarButtonItem(title: "",
+                                                style: .plain,
+                                                target: self,
+                                                action: nil)
+        backBarButtonItem.tintColor = .black
+        self.navigationItem.backBarButtonItem = backBarButtonItem
         
         navigationController?.pushViewController(weatherDetailVC, animated: true)
     }
