@@ -11,7 +11,7 @@ class WeatherViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chooncheon"]
+    private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chuncheon"]
     
     private var weatherOfCity: [WeatherInformation] = []
     
@@ -41,9 +41,9 @@ class WeatherViewController: UIViewController {
         
         view.addSubview(weatherCollectionView)
         NSLayoutConstraint.activate([
-            weatherCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            weatherCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             weatherCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
+            weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             weatherCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
     }
@@ -56,8 +56,8 @@ class WeatherViewController: UIViewController {
     }
     
     func getCurrentWeather(cities: [String]) {
-        
         cities.forEach { city in
+            
             URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
                 switch response {
                 case .success(let weatherData):
@@ -65,16 +65,13 @@ class WeatherViewController: UIViewController {
                     DispatchQueue.main.async {
                         if !self.weatherOfCity.isEmpty {
                             self.weatherCollectionView.reloadData()
-                            dump(self.weatherOfCity)
                         }
                     }
-                    
                 case .failure(let error):
                     print("current weather response failure: \(error.localizedDescription)")
                 }
             }
         }
-        
     }
     
     // MARK: - @objc
@@ -99,7 +96,9 @@ extension WeatherViewController: UICollectionViewDataSource {
 }
 
 extension WeatherViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("index: \(weatherOfCity[indexPath.row])")
+    }
 }
 
 // 전처리
