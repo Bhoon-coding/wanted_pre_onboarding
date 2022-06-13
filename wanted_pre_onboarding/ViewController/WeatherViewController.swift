@@ -8,8 +8,13 @@
 import UIKit
 
 class WeatherViewController: UIViewController {
-
+    
     // MARK: - Properties
+    
+    private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chuncheon"]
+    
+    private var weatherOfCity: [WeatherInformation] = []
+    
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
@@ -26,9 +31,9 @@ class WeatherViewController: UIViewController {
         
         configureUI()
         configureCollectionView()
-        URLSessionManager.shared.getCurrentWeather(cityName: "suwon")
+        getCurrentWeather(cities: cities)
     }
-
+    
     // MARK: - Methods
     
     private func configureUI() {
@@ -36,12 +41,11 @@ class WeatherViewController: UIViewController {
         
         view.addSubview(weatherCollectionView)
         NSLayoutConstraint.activate([
-            weatherCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            weatherCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             weatherCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
+            weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             weatherCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
-        
     }
     
     private func configureCollectionView() {
@@ -50,8 +54,28 @@ class WeatherViewController: UIViewController {
         weatherCollectionView.register(WeatherCollectionViewCell.self,
                                        forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
     }
+    
+    func getCurrentWeather(cities: [String]) {
+        cities.forEach { city in
+            
+            URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
+                switch response {
+                case .success(let weatherData):
+                    self.weatherOfCity.append(weatherData)
+                    DispatchQueue.main.async {
+                        if !self.weatherOfCity.isEmpty {
+                            self.weatherCollectionView.reloadData()
+                        }
+                    }
+                case .failure(let error):
+                    print("current weather response failure: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+    
     // MARK: - @objc
-
+    
     
 }
 
@@ -59,20 +83,22 @@ class WeatherViewController: UIViewController {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return weatherOfCity.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as? WeatherCollectionViewCell else { return WeatherCollectionViewCell() }
         
-        cell.configureCell()
+        cell.configureCell(weatherOfCity: weatherOfCity[indexPath.row])
         
         return cell
     }
 }
 
 extension WeatherViewController: UICollectionViewDelegate {
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("index: \(weatherOfCity[indexPath.row])")
+    }
 }
 
 // 전처리
@@ -90,8 +116,8 @@ struct ViewControllerRepresentable: UIViewControllerRepresentable {
     }
     // makeui
     func makeUIViewController(context: Context) -> UIViewController {
-    // Preview를 보고자 하는 Viewcontroller 이름
-    // e.g.)
+        // Preview를 보고자 하는 Viewcontroller 이름
+        // e.g.)
         return WeatherViewController()
     }
 }
@@ -102,8 +128,8 @@ struct ViewController_Previews: PreviewProvider {
     static var previews: some View {
         // UIViewControllerRepresentable에 지정된 이름.
         ViewControllerRepresentable()
-
-// 테스트 해보고자 하는 기기
+        
+        // 테스트 해보고자 하는 기기
             .previewDevice("iPhone 11")
     }
 }

@@ -15,14 +15,12 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var cityLabel: UILabel = {
         let label = UILabel()
-        label.text = "수원"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var weatherIcon: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "sun.min.fill")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -36,7 +34,6 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentTemp: UILabel = {
         let label = UILabel()
-        label.text = "30°C"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -50,16 +47,13 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentHumidity: UILabel = {
         let label = UILabel()
-        label.text = "30%"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        configureCell()
-        contentView.layer.borderWidth = 1
-        contentView.layer.cornerRadius = 16
+        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -68,8 +62,31 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Methods
     
-    // TODO: []  파라미터에 날씨 데이터 넣기
-    func configureCell() {
+    
+    // TODO: [x]  파라미터에 날씨 데이터 넣기
+    func configureCell(weatherOfCity: WeatherInformation) {
+        guard let iconCode = weatherOfCity.weather.first?.icon,
+              let iconUrl = URL(string:    "http://openweathermap.org/img/wn/\(iconCode)@2x.png") else { return }
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: iconUrl) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.weatherIcon.image = image
+                    }
+                }
+            }
+        }
+    
+        contentView.layer.borderWidth = 1
+        contentView.layer.cornerRadius = 16
+        
+        cityLabel.text = weatherOfCity.name
+        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°C"
+        currentHumidity.text = "\(weatherOfCity.temp.humidity)%"
+        
+    }
+    
+    func configureLayout() {
         
         contentView.addSubview(cityLabel)
         NSLayoutConstraint.activate([
@@ -109,7 +126,5 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             currentHumidity.centerXAnchor.constraint(equalTo: currentHumidityLabel.centerXAnchor)
         ])
     }
-    
-    
     
 }
