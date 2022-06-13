@@ -19,7 +19,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    lazy var weatherIcon: UIImageView = {
+    lazy var weatherIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -71,7 +71,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             if let data = try? Data(contentsOf: iconUrl) {
                 if let image = UIImage(data: data) {
                     DispatchQueue.main.async {
-                        self?.weatherIcon.image = image
+                        self?.weatherIconImageView.image = image
                     }
                 }
             }
@@ -94,12 +94,12 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             cityLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
-        contentView.addSubview(weatherIcon)
+        contentView.addSubview(weatherIconImageView)
         NSLayoutConstraint.activate([
-            weatherIcon.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 16),
-            weatherIcon.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            weatherIcon.widthAnchor.constraint(equalToConstant: 70),
-            weatherIcon.heightAnchor.constraint(equalToConstant: 70)
+            weatherIconImageView.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 16),
+            weatherIconImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            weatherIconImageView.widthAnchor.constraint(equalToConstant: 70),
+            weatherIconImageView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         contentView.addSubview(currentTempLabel)
