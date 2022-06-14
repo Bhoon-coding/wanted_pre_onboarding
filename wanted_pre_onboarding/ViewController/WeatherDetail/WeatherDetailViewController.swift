@@ -9,6 +9,29 @@ import UIKit
 
 class WeatherDetailViewController: UIViewController {
     
+    // MARK: - Enums
+    
+    private enum WeatherString {
+        static let highestTemp = "최고"
+        static let lowestTemp = "최저"
+        static let feelTemp = "체감"
+        static let pressure = "기압"
+        static let wind = "풍속"
+        static let humidity = "습도"
+        
+        enum Images {
+            static let pressure = "dial.max"
+            static let wind = "wind"
+            static let humidity = "humidity.fill"
+        }
+        
+        enum Units {
+            static let pressure = "hpa"
+            static let wind = "m/s"
+            static let humidity = "%"
+        }
+    }
+    
     // MARK: - Properties
     
     let weatherInformation: WeatherInformation
@@ -64,7 +87,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var maxTempLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "최고: \(Int(weatherInformation.temp.tempMax - 273.15))°"
+        label.text = "\(WeatherString.highestTemp)  \(Int(weatherInformation.temp.tempMax - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -72,7 +95,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var minTempLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "최저: \(Int(weatherInformation.temp.tempMin - 273.15))°"
+        label.text = "\(WeatherString.lowestTemp)  \(Int(weatherInformation.temp.tempMin - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -80,7 +103,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var feelTempLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "체감: \(Int(weatherInformation.temp.feelsLike - 273.15))°"
+        label.text = "\(WeatherString.lowestTemp)  \(Int(weatherInformation.temp.feelsLike - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -107,7 +130,7 @@ class WeatherDetailViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .white
-        label.text = "기압"
+        label.text = "\(WeatherString.pressure)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -115,7 +138,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var pressureImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "dial.max")
+        imageView.image = UIImage(systemName: "\(WeatherString.Images.pressure)")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -123,7 +146,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var pressureDetailLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "\(weatherInformation.temp.pressure) hpa"
+        label.text = "\(weatherInformation.temp.pressure) \(WeatherString.Units.pressure)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -142,7 +165,7 @@ class WeatherDetailViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .white
-        label.text = "풍속"
+        label.text = "\(WeatherString.wind)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -150,7 +173,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var windImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "wind")
+        imageView.image = UIImage(systemName: "\(WeatherString.Images.wind)")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -158,7 +181,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var windDetailLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "\(Int(weatherInformation.wind.speed)) m/s"
+        label.text = "\(Int(weatherInformation.wind.speed)) \(WeatherString.Units.wind)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -177,7 +200,7 @@ class WeatherDetailViewController: UIViewController {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 16)
         label.textColor = .white
-        label.text = "습도"
+        label.text = "\(WeatherString.humidity)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -185,7 +208,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var humidityImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "humidity.fill")
+        imageView.image = UIImage(systemName: "\(WeatherString.Images.humidity)")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -193,7 +216,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var humidityDetailLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "\(weatherInformation.temp.humidity)%"
+        label.text = "\(weatherInformation.temp.humidity)\(WeatherString.Units.humidity)"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
