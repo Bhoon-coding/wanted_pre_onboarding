@@ -35,11 +35,6 @@ class WeatherViewController: UIViewController {
         getCurrentWeather(cities: cities)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-    }
-    
     // MARK: - Methods
     
     private func configureUI() {
