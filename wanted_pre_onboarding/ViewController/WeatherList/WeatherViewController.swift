@@ -105,7 +105,7 @@ extension WeatherViewController: UICollectionViewDelegate {
                                                 style: .plain,
                                                 target: self,
                                                 action: nil)
-        backBarButtonItem.tintColor = .black
+        backBarButtonItem.tintColor = .white
         self.navigationItem.backBarButtonItem = backBarButtonItem
         
         navigationController?.pushViewController(weatherDetailVC, animated: true)
