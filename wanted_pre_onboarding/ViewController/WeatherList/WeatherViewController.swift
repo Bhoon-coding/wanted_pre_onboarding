@@ -35,6 +35,11 @@ class WeatherViewController: UIViewController {
         getCurrentWeather(cities: cities)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+    }
+    
     // MARK: - Methods
     
     private func configureUI() {
@@ -57,21 +62,29 @@ class WeatherViewController: UIViewController {
     }
     
     func getCurrentWeather(cities: [String]) {
+        
+        let workingQueue = DispatchQueue(label: "workingQueue", attributes: .concurrent)
+        let group1 = DispatchGroup()
+        
         cities.forEach { city in
             
+            group1.enter()
             URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
                 switch response {
                 case .success(let weatherData):
-                    self.weatherOfCity.append(weatherData)
-                    DispatchQueue.main.async {
-                        if !self.weatherOfCity.isEmpty {
-                            self.weatherCollectionView.reloadData()
-                        }
+                    workingQueue.async(group: group1) {
+                        self.weatherOfCity.append(weatherData)
+                        group1.leave()
                     }
                 case .failure(let error):
                     print("current weather response failure: \(error.localizedDescription)")
                 }
             }
+        }
+        let defaultQueue = DispatchQueue.main
+        
+        group1.notify(queue: defaultQueue) {
+            self.weatherCollectionView.reloadData()
         }
     }
     
