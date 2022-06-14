@@ -21,9 +21,7 @@ struct URLSessionManager {
             let decoder = JSONDecoder()
             
             guard let weatherInformation = try? decoder.decode(WeatherInformation.self, from: data)
-                    
              else { return }
-            dump(weatherInformation)
             completion(.success(weatherInformation))
         }.resume()
         

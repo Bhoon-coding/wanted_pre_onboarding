@@ -31,10 +31,9 @@ class WeatherDetailViewController: UIViewController {
         return view
     }()
     
-    // TODO: [] icon url -> 이미지 모듈화
+    // TODO: [x] iconLoad method -> extension 모듈화
     private lazy var weatherIconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "moon.fill")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -42,12 +41,13 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 20)
         label.text = weatherInformation.weather.first?.description
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var tempWrapper: UIView = {
+    private let tempWrapper: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -55,7 +55,7 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 40)
+        label.font = UIFont.boldSystemFont(ofSize: 60)
         label.text = "\(Int(weatherInformation.temp.temp - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -102,6 +102,7 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var pressureTitleLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "기압"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -133,6 +134,7 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var windTitleLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "풍속"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -147,7 +149,7 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var windDetailLabel: UILabel = {
         let label = UILabel()
-        label.text = "\(weatherInformation.wind.speed) m/s"
+        label.text = "\(Int(weatherInformation.wind.speed)) m/s"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -164,6 +166,7 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var humidityTitleLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.text = "습도"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -188,8 +191,19 @@ class WeatherDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureUI()
         configureNavigationBar()
+        configureUI()
+        updateWeatherImage()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tempWrapper.layer.addBorder([.top],
+                                    color: .lightGray,
+                                    width: 1.0)
+        etcHorizontalWrapper.layer.addBorder([.top],
+                                             color: .lightGray,
+                                             width: 1.0)
     }
     
     // MARK: - Methods
@@ -198,7 +212,11 @@ class WeatherDetailViewController: UIViewController {
         title = "\(weatherInformation.name)"
     }
     
-    
+    private func updateWeatherImage() {
+        guard let iconCode = weatherInformation.weather.first?.icon else { return }
+        let iconUrl = "http://openweathermap.org/img/wn/\(iconCode)@2x.png"
+        weatherIconImageView.load(urlString: iconUrl)
+    }
     
     // MARK: - @objc
     
@@ -209,7 +227,7 @@ class WeatherDetailViewController: UIViewController {
 extension WeatherDetailViewController {
     private func configureUI() {
         view.backgroundColor = .white
-        
+    
         [wholeWrapper,
          weatherIconImageView,
          tempWrapper,
@@ -256,48 +274,50 @@ extension WeatherDetailViewController {
         ])
         
         NSLayoutConstraint.activate([
-            weatherIconImageView.topAnchor.constraint(equalTo: wholeWrapper.safeAreaLayoutGuide.topAnchor, constant: 60),
+            weatherIconImageView.topAnchor.constraint(equalTo: wholeWrapper.safeAreaLayoutGuide.topAnchor, constant: 24),
             weatherIconImageView.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
-            weatherIconImageView.widthAnchor.constraint(equalToConstant: 140),
+            weatherIconImageView.widthAnchor.constraint(equalToConstant: 160),
             weatherIconImageView.heightAnchor.constraint(equalToConstant: 140)
         ])
         
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: weatherIconImageView.bottomAnchor, constant: 16),
+            descriptionLabel.topAnchor.constraint(equalTo: weatherIconImageView.bottomAnchor, constant: 8),
             descriptionLabel.centerXAnchor.constraint(equalTo: weatherIconImageView.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
-            tempWrapper.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 40),
+            tempWrapper.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
             tempWrapper.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
-            tempWrapper.widthAnchor.constraint(equalTo: weatherIconImageView.widthAnchor),
-            tempWrapper.heightAnchor.constraint(equalTo: weatherIconImageView.heightAnchor)
+            tempWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
+            tempWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
+            tempWrapper.heightAnchor.constraint(equalToConstant: 120)
         ])
         
         NSLayoutConstraint.activate([
+            currentTempLabel.leadingAnchor.constraint(equalTo: tempWrapper.leadingAnchor, constant: 56),
             currentTempLabel.centerYAnchor.constraint(equalTo: tempWrapper.centerYAnchor),
-            currentTempLabel.leadingAnchor.constraint(equalTo: tempWrapper.leadingAnchor, constant: 16)
+            
         ])
         
         NSLayoutConstraint.activate([
-            maxTempLabel.topAnchor.constraint(equalTo: tempWrapper.topAnchor, constant: 32),
-            maxTempLabel.leadingAnchor.constraint(equalTo: currentTempLabel.trailingAnchor, constant: 8)
+            maxTempLabel.topAnchor.constraint(equalTo: tempWrapper.topAnchor, constant: 24),
+            maxTempLabel.trailingAnchor.constraint(equalTo: tempWrapper.trailingAnchor, constant: -56)
         ])
         
         NSLayoutConstraint.activate([
-            minTempLabel.topAnchor.constraint(equalTo: maxTempLabel.bottomAnchor, constant: 32),
-            minTempLabel.leadingAnchor.constraint(equalTo: maxTempLabel.leadingAnchor)
+            minTempLabel.bottomAnchor.constraint(equalTo: tempWrapper.bottomAnchor, constant: -24),
+            minTempLabel.trailingAnchor.constraint(equalTo: tempWrapper.trailingAnchor, constant: -56)
         ])
         
         NSLayoutConstraint.activate([
-            feelTempLabel.topAnchor.constraint(equalTo: tempWrapper.bottomAnchor, constant: 16),
+            feelTempLabel.topAnchor.constraint(equalTo: tempWrapper.bottomAnchor),
             feelTempLabel.centerXAnchor.constraint(equalTo: tempWrapper.centerXAnchor)
         ])
         
         NSLayoutConstraint.activate([
             etcHorizontalWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
             etcHorizontalWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
-            etcHorizontalWrapper.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 40),
+            etcHorizontalWrapper.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 24),
             etcHorizontalWrapper.heightAnchor.constraint(equalToConstant: 140)
         ])
         

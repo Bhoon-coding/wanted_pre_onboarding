@@ -65,24 +65,18 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     // TODO: [x]  파라미터에 날씨 데이터 넣기
     func configureCell(weatherOfCity: WeatherInformation) {
-        guard let iconCode = weatherOfCity.weather.first?.icon,
-              let iconUrl = URL(string:    "http://openweathermap.org/img/wn/\(iconCode)@2x.png") else { return }
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: iconUrl) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.weatherIconImageView.image = image
-                    }
-                }
-            }
-        }
-    
         contentView.layer.borderWidth = 1
         contentView.layer.cornerRadius = 16
         
         cityLabel.text = weatherOfCity.name
         currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°"
         currentHumidity.text = "\(weatherOfCity.temp.humidity)%"
+        
+        guard let iconCode = weatherOfCity.weather.first?.icon
+               else { return }
+        let iconUrl = "http://openweathermap.org/img/wn/\(iconCode)@2x.png"
+        
+        weatherIconImageView.load(urlString: iconUrl)
         
     }
     

@@ -100,7 +100,6 @@ extension WeatherViewController: UICollectionViewDelegate {
         
         let weatherInformation = weatherOfCity[indexPath.row]
         let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
-//        let weatherDetailVC = WeatherDetailViewController()
         let backBarButtonItem = UIBarButtonItem(title: "",
                                                 style: .plain,
                                                 target: self,
