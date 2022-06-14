@@ -81,7 +81,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 16
         
         cityLabel.text = weatherOfCity.name
-        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°C"
+        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°"
         currentHumidity.text = "\(weatherOfCity.temp.humidity)%"
         
     }

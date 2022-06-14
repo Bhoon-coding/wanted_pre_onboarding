@@ -11,16 +11,29 @@ class WeatherDetailViewController: UIViewController {
     
     // MARK: - Properties
     
+    let weatherInformation: WeatherInformation
+
+    init(weatherInformation: WeatherInformation) {
+        self.weatherInformation = weatherInformation
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - UIProperties
+    
     private lazy var wholeWrapper: UIView = {
         let view = UIView()
-        view.backgroundColor = .cyan
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
+    // TODO: [] icon url -> 이미지 모듈화
     private lazy var weatherIconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .brown
         imageView.image = UIImage(systemName: "moon.fill")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -29,42 +42,42 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
-        label.text = "날씨설명"
+        label.text = weatherInformation.weather.first?.description
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var tempWrapper: UIView = {
         let view = UIView()
-        view.backgroundColor = .lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     private lazy var currentTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "기온°"
+        label.font = UIFont.boldSystemFont(ofSize: 40)
+        label.text = "\(Int(weatherInformation.temp.temp - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var maxTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "최고°"
+        label.text = "최고: \(Int(weatherInformation.temp.tempMax - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var minTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "최저°"
+        label.text = "최저: \(Int(weatherInformation.temp.tempMin - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var feelTempLabel: UILabel = {
         let label = UILabel()
-        label.text = "체감°"
+        label.text = "체감: \(Int(weatherInformation.temp.feelsLike - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -73,14 +86,12 @@ class WeatherDetailViewController: UIViewController {
         let stackView = UIStackView()
         stackView.spacing = 8
         stackView.distribution = .fillEqually
-        stackView.backgroundColor = .orange
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
     
     private lazy var pressureStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.backgroundColor = .magenta
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
@@ -105,14 +116,13 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var pressureDetailLabel: UILabel = {
         let label = UILabel()
-        label.text = "1011 hpa"
+        label.text = "\(weatherInformation.temp.pressure) hpa"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var windStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.backgroundColor = .magenta
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
@@ -137,14 +147,13 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var windDetailLabel: UILabel = {
         let label = UILabel()
-        label.text = "4 m/s"
+        label.text = "\(weatherInformation.wind.speed) m/s"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private lazy var humidityStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.backgroundColor = .magenta
         stackView.spacing = 8
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
@@ -169,23 +178,10 @@ class WeatherDetailViewController: UIViewController {
     
     private lazy var humidityDetailLabel: UILabel = {
         let label = UILabel()
-        label.text = "60%"
+        label.text = "\(weatherInformation.temp.humidity)%"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-
-//    let weatherInformation: WeatherInformation
-//
-//    init(weatherInformation: WeatherInformation) {
-//        self.weatherInformation = weatherInformation
-//
-//        super.init(nibName: nil, bundle: nil)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
     
     // MARK: - LifeCycle
 
@@ -199,9 +195,18 @@ class WeatherDetailViewController: UIViewController {
     // MARK: - Methods
     
     private func configureNavigationBar() {
-        title = "도시 이름"
+        title = "\(weatherInformation.name)"
     }
     
+    
+    
+    // MARK: - @objc
+    
+}
+
+// MARK: - Extensions
+
+extension WeatherDetailViewController {
     private func configureUI() {
         view.backgroundColor = .white
         
@@ -319,49 +324,4 @@ class WeatherDetailViewController: UIViewController {
         ])
         
     }
-    
-    // MARK: - @objc
-    
 }
-
-// MARK: - Extensions
-
-
-
-// 전처리
-#if DEBUG
-
-import SwiftUI
-@available(iOS 13.0, *)
-
-// UIViewControllerRepresentable을 채택
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    // update
-    // _ uiViewController: UIViewController로 지정
-    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
-        
-    }
-    // makeui
-    func makeUIViewController(context: Context) -> UIViewController {
-        // Preview를 보고자 하는 Viewcontroller 이름
-        // e.g.)
-        
-        return WeatherDetailViewController()
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    
-    @available(iOS 13.0, *)
-    static var previews: some View {
-        
-        // UIViewControllerRepresentable에 지정된 이름.
-        Group {
-            ViewControllerRepresentable()
-            
-            // 테스트 해보고자 하는 기기
-                .previewDevice("iPhone 11")
-        }
-    }
-}
-#endif
