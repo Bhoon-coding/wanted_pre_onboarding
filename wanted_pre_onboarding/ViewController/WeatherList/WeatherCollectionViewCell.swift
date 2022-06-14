@@ -15,6 +15,8 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var cityLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -27,6 +29,8 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentTempLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.text = "현재기온"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,12 +38,15 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentTemp: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var currentHumidityLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.text = "현재습도"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -47,6 +54,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentHumidity: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -65,8 +73,10 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     // TODO: [x]  파라미터에 날씨 데이터 넣기
     func configureCell(weatherOfCity: WeatherInformation) {
+        
+        contentView.layer.cornerRadius = 20
         contentView.layer.borderWidth = 1
-        contentView.layer.cornerRadius = 16
+        contentView.layer.borderColor = UIColor.white.cgColor
         
         cityLabel.text = weatherOfCity.name
         currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°"

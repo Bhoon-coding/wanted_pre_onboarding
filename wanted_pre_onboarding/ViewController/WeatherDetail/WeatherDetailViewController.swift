@@ -226,7 +226,7 @@ class WeatherDetailViewController: UIViewController {
 
 extension WeatherDetailViewController {
     private func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemTeal
     
         [wholeWrapper,
          weatherIconImageView,

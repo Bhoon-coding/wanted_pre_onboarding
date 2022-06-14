@@ -20,6 +20,7 @@ class WeatherViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
         layout.itemSize = CGSize(width: 160, height: 180)
         let collecionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collecionView.backgroundColor = .systemTeal
         collecionView.translatesAutoresizingMaskIntoConstraints = false
         return collecionView
     }()
@@ -37,7 +38,7 @@ class WeatherViewController: UIViewController {
     // MARK: - Methods
     
     private func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemTeal
         
         view.addSubview(weatherCollectionView)
         NSLayoutConstraint.activate([
