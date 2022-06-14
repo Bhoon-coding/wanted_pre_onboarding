@@ -15,11 +15,13 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var cityLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    lazy var weatherIcon: UIImageView = {
+    lazy var weatherIconImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -27,6 +29,8 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentTempLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.text = "현재기온"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -34,12 +38,15 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentTemp: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     lazy var currentHumidityLabel: UILabel = {
         let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .white
         label.text = "현재습도"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -47,6 +54,7 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     lazy var currentHumidity: UILabel = {
         let label = UILabel()
+        label.textColor = .white
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -65,24 +73,20 @@ class WeatherCollectionViewCell: UICollectionViewCell {
     
     // TODO: [x]  파라미터에 날씨 데이터 넣기
     func configureCell(weatherOfCity: WeatherInformation) {
-        guard let iconCode = weatherOfCity.weather.first?.icon,
-              let iconUrl = URL(string:    "http://openweathermap.org/img/wn/\(iconCode)@2x.png") else { return }
-        DispatchQueue.global().async { [weak self] in
-            if let data = try? Data(contentsOf: iconUrl) {
-                if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self?.weatherIcon.image = image
-                    }
-                }
-            }
-        }
-    
+        
+        contentView.layer.cornerRadius = 20
         contentView.layer.borderWidth = 1
-        contentView.layer.cornerRadius = 16
+        contentView.layer.borderColor = UIColor.white.cgColor
         
         cityLabel.text = weatherOfCity.name
-        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°C"
+        currentTemp.text = "\(Int(weatherOfCity.temp.temp - 273.15))°"
         currentHumidity.text = "\(weatherOfCity.temp.humidity)%"
+        
+        guard let iconCode = weatherOfCity.weather.first?.icon
+               else { return }
+        let iconUrl = "http://openweathermap.org/img/wn/\(iconCode)@2x.png"
+        
+        weatherIconImageView.load(urlString: iconUrl)
         
     }
     
@@ -94,12 +98,12 @@ class WeatherCollectionViewCell: UICollectionViewCell {
             cityLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         ])
         
-        contentView.addSubview(weatherIcon)
+        contentView.addSubview(weatherIconImageView)
         NSLayoutConstraint.activate([
-            weatherIcon.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 16),
-            weatherIcon.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            weatherIcon.widthAnchor.constraint(equalToConstant: 70),
-            weatherIcon.heightAnchor.constraint(equalToConstant: 70)
+            weatherIconImageView.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 16),
+            weatherIconImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            weatherIconImageView.widthAnchor.constraint(equalToConstant: 70),
+            weatherIconImageView.heightAnchor.constraint(equalToConstant: 70)
         ])
         
         contentView.addSubview(currentTempLabel)

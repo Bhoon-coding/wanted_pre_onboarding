@@ -20,6 +20,7 @@ class WeatherViewController: UIViewController {
         layout.sectionInset = UIEdgeInsets(top: 20, left: 16, bottom: 20, right: 16)
         layout.itemSize = CGSize(width: 160, height: 180)
         let collecionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collecionView.backgroundColor = .systemTeal
         collecionView.translatesAutoresizingMaskIntoConstraints = false
         return collecionView
     }()
@@ -37,7 +38,7 @@ class WeatherViewController: UIViewController {
     // MARK: - Methods
     
     private func configureUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .systemTeal
         
         view.addSubview(weatherCollectionView)
         NSLayoutConstraint.activate([
@@ -97,40 +98,16 @@ extension WeatherViewController: UICollectionViewDataSource {
 
 extension WeatherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("index: \(weatherOfCity[indexPath.row])")
-    }
-}
-
-// 전처리
-#if DEBUG
-
-import SwiftUI
-@available(iOS 13.0, *)
-
-// UIViewControllerRepresentable을 채택
-struct ViewControllerRepresentable: UIViewControllerRepresentable {
-    // update
-    // _ uiViewController: UIViewController로 지정
-    func updateUIViewController(_ uiViewController: UIViewController , context: Context) {
         
-    }
-    // makeui
-    func makeUIViewController(context: Context) -> UIViewController {
-        // Preview를 보고자 하는 Viewcontroller 이름
-        // e.g.)
-        return WeatherViewController()
-    }
-}
-
-struct ViewController_Previews: PreviewProvider {
-    
-    @available(iOS 13.0, *)
-    static var previews: some View {
-        // UIViewControllerRepresentable에 지정된 이름.
-        ViewControllerRepresentable()
+        let weatherInformation = weatherOfCity[indexPath.row]
+        let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
+        let backBarButtonItem = UIBarButtonItem(title: "",
+                                                style: .plain,
+                                                target: self,
+                                                action: nil)
+        backBarButtonItem.tintColor = .white
+        self.navigationItem.backBarButtonItem = backBarButtonItem
         
-        // 테스트 해보고자 하는 기기
-            .previewDevice("iPhone 11")
+        navigationController?.pushViewController(weatherDetailVC, animated: true)
     }
 }
-#endif
