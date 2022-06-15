@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeatherDetailViewController: UIViewController {
+final class WeatherDetailViewController: UIViewController {
     
     // MARK: - Enums
     
@@ -103,7 +103,7 @@ class WeatherDetailViewController: UIViewController {
     private lazy var feelTempLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.text = "\(WeatherString.lowestTemp)  \(Int(weatherInformation.temp.feelsLike - 273.15))°"
+        label.text = "\(WeatherString.feelTemp)  \(Int(weatherInformation.temp.feelsLike - 273.15))°"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()

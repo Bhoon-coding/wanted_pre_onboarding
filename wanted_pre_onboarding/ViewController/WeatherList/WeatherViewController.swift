@@ -7,13 +7,15 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController {
+final class WeatherViewController: UIViewController {
     
     // MARK: - Properties
     
     private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chuncheon"]
     
     private var weatherOfCity: [WeatherInformation] = []
+    
+    let spinner = SpinnerViewController()
     
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -30,19 +32,28 @@ class WeatherViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureNavigationBar()
         configureUI()
         configureCollectionView()
+        createSpinnerView()
         getCurrentWeather(cities: cities)
+        
     }
     
     // MARK: - Methods
     
+    private func configureNavigationBar() {
+        navigationController?.navigationBar.barTintColor = .systemTeal
+    }
+    
     private func configureUI() {
+        
         view.backgroundColor = .systemTeal
         
-        view.addSubview(weatherCollectionView)
+        [weatherCollectionView].forEach { view.addSubview($0) }
+        
         NSLayoutConstraint.activate([
-            weatherCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            weatherCollectionView.topAnchor.constraint(equalTo: view.topAnchor),
             weatherCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             weatherCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
@@ -56,22 +67,43 @@ class WeatherViewController: UIViewController {
                                        forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
     }
     
-    func getCurrentWeather(cities: [String]) {
+    private func createSpinnerView() {
+        addChild(spinner)
+        spinner.view.frame = view.frame
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+    }
+    
+    private func removeSpinnerView() {
+        spinner.willMove(toParent: nil)
+        spinner.view.removeFromSuperview()
+        spinner.removeFromParent()
+    }
+    
+    private func getCurrentWeather(cities: [String]) {
+        
+        let workingQueue = DispatchQueue(label: "workingQueue", attributes: .concurrent)
+        let workGroup = DispatchGroup()
+        let defaultQueue = DispatchQueue.main
+        
         cities.forEach { city in
-            
+            workGroup.enter()
             URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
                 switch response {
                 case .success(let weatherData):
-                    self.weatherOfCity.append(weatherData)
-                    DispatchQueue.main.async {
-                        if !self.weatherOfCity.isEmpty {
-                            self.weatherCollectionView.reloadData()
-                        }
+                    workingQueue.async(group: workGroup) {
+                        self.weatherOfCity.append(weatherData)
+                        workGroup.leave()
                     }
                 case .failure(let error):
                     print("current weather response failure: \(error.localizedDescription)")
                 }
             }
+        }
+        
+        workGroup.notify(queue: defaultQueue) {
+            self.weatherCollectionView.reloadData()
+            self.removeSpinnerView()
         }
     }
     
