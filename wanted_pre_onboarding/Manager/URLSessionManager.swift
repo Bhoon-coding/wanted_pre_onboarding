@@ -7,14 +7,17 @@
 
 import Foundation
 
+private enum WeatherAPI {
+    
+    static let baseURL = "https://api.openweathermap.org/"
+}
+
 struct URLSessionManager {
     static let shared = URLSessionManager()
-    let baseURL = "https://api.openweathermap.org/"
+    
     
     func fetchCurrentWeather(cityName: String, completion: @escaping (Result<WeatherInformation, Error>) -> ()) {
-        guard let url = URL(string: baseURL + "data/2.5/weather?q=\(cityName)&appid=\(Constants.weatherApiKey)&lang=KR") else {
-            return
-        }
+        guard let url = URL(string: WeatherAPI.baseURL + "data/2.5/weather?q=\(cityName)&appid=\(Constants.weatherApiKey)&lang=KR") else { return }
         let session = URLSession(configuration: .default)
         session.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else { return }
