@@ -15,8 +15,9 @@ private enum WeatherAPI {
 struct URLSessionManager {
     static let shared = URLSessionManager()
     
-    
-    func fetchCurrentWeather(cityName: String, completion: @escaping (Result<WeatherInformation, Error>) -> ()) {
+    func fetchCurrentWeather(cityName: String,
+                             completion: @escaping (Result<WeatherInformation, Error>) -> ()
+    ) {
         guard let url = URL(string: WeatherAPI.baseURL + "data/2.5/weather?q=\(cityName)&appid=\(Constants.weatherApiKey)&lang=KR") else { return }
         let session = URLSession(configuration: .default)
         session.dataTask(with: url) { data, response, error in

@@ -1,0 +1,6 @@
+framework module Pods_wanted_pre_onboardingTests {
+  umbrella header "Pods-wanted_pre_onboardingTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
