@@ -12,8 +12,10 @@ private enum WeatherAPI {
     static let baseURL = "https://api.openweathermap.org/"
 }
 
-struct URLSessionManager {
-    static let shared = URLSessionManager()
+struct NetworkManager {
+    static let shared = NetworkManager()
+    
+//    static func request<R: Codable>(host: String = )
     
     func fetchCurrentWeather(cityName: String,
                              completion: @escaping (Result<WeatherInformation, Error>) -> ()
@@ -23,11 +25,11 @@ struct URLSessionManager {
         session.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else { return }
             let decoder = JSONDecoder()
-            
+
             guard let weatherInformation = try? decoder.decode(WeatherInformation.self, from: data)
              else { return }
             completion(.success(weatherInformation))
         }.resume()
-        
+
     }
 }

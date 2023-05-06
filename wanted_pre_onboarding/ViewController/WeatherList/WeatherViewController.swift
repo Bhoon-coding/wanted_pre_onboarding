@@ -88,7 +88,7 @@ final class WeatherViewController: UIViewController {
         
         cities.forEach { city in
             workGroup.enter()
-            URLSessionManager.shared.fetchCurrentWeather(cityName: city) { (response) in
+            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
                 switch response {
                 case .success(let weatherData):
                     workingQueue.async(group: workGroup) {

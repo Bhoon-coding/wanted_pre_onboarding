@@ -9,29 +9,6 @@ import UIKit
 
 final class WeatherDetailViewController: UIViewController {
     
-    // MARK: - Enums
-    
-    private enum WeatherString {
-        static let highestTemp = "최고"
-        static let lowestTemp = "최저"
-        static let feelTemp = "체감"
-        static let pressure = "기압"
-        static let wind = "풍속"
-        static let humidity = "습도"
-        
-        enum Images {
-            static let pressure = "dial.max"
-            static let wind = "wind"
-            static let humidity = "humidity.fill"
-        }
-        
-        enum Units {
-            static let pressure = "hpa"
-            static let wind = "m/s"
-            static let humidity = "%"
-        }
-    }
-    
     // MARK: - Properties
     
     let weatherInformation: WeatherInformation
@@ -233,12 +210,8 @@ final class WeatherDetailViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        tempWrapper.layer.addBorder([.top],
-                                    color: .white,
-                                    width: 1.0)
-        etcHorizontalWrapper.layer.addBorder([.top],
-                                             color: .white,
-                                             width: 1.0)
+        tempWrapper.layer.addBorder([.top], color: .white, width: 1.0)
+        etcHorizontalWrapper.layer.addBorder([.top], color: .white, width: 1.0)
     }
     
     // MARK: - Methods
@@ -379,5 +352,29 @@ extension WeatherDetailViewController {
             humidityImageView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
+    }
+}
+
+
+// MARK: - NameSpaces
+
+private enum WeatherString {
+    static let highestTemp = "최고"
+    static let lowestTemp = "최저"
+    static let feelTemp = "체감"
+    static let pressure = "기압"
+    static let wind = "풍속"
+    static let humidity = "습도"
+    
+    enum Images {
+        static let pressure = "dial.max"
+        static let wind = "wind"
+        static let humidity = "humidity.fill"
+    }
+    
+    enum Units {
+        static let pressure = "hpa"
+        static let wind = "m/s"
+        static let humidity = "%"
     }
 }
