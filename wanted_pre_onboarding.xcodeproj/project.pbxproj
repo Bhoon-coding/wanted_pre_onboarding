@@ -24,6 +24,7 @@
 		E1334A8E28580FB500845413 /* UIImageViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A8D28580FB500845413 /* UIImageViewEx.swift */; };
 		E1334A90285825F800845413 /* CALayerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A8F285825F800845413 /* CALayerEx.swift */; };
 		E1334A922858DE8A00845413 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A912858DE8A00845413 /* SpinnerViewController.swift */; };
+		E13FA4D42A07A9F0001B1465 /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13FA4D32A07A9F0001B1465 /* WeatherAPI.swift */; };
 		E1D06B24285AD18E00C18393 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D06B23285AD18E00C18393 /* ImageCacheManager.swift */; };
 		E1F3A2B62854D59E0029A23D /* WeatherInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3A2B52854D59E0029A23D /* WeatherInformation.swift */; };
 		E1F3A2BA2854D7B10029A23D /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1F3A2B92854D7B10029A23D /* NetworkManager.swift */; };
@@ -75,7 +76,9 @@
 		E1334A8D28580FB500845413 /* UIImageViewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewEx.swift; sourceTree = "<group>"; };
 		E1334A8F285825F800845413 /* CALayerEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerEx.swift; sourceTree = "<group>"; };
 		E1334A912858DE8A00845413 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		E13FA4D32A07A9F0001B1465 /* WeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
 		E1D06B23285AD18E00C18393 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
+		E1E75D632A05FDBF00DB3614 /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1F3A2B52854D59E0029A23D /* WeatherInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherInformation.swift; sourceTree = "<group>"; };
 		E1F3A2B92854D7B10029A23D /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		E1F3A2BC2854D8660029A23D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 		BC585848DDF0726929A0C1EE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E1E75D632A05FDBF00DB3614 /* RxSwift.framework */,
 				0B4C5E740E2848FA7A812D9A /* Pods_wanted_pre_onboarding.framework */,
 				0FD16A82AEC36D8A2542F667 /* Pods_wanted_pre_onboarding_wanted_pre_onboardingUITests.framework */,
 				376F59F4F26F27D1BCB0F161 /* Pods_wanted_pre_onboardingTests.framework */,
@@ -208,6 +212,7 @@
 		E116CA4C2A05FB230071FE22 /* remote */ = {
 			isa = PBXGroup;
 			children = (
+				E13FA4D22A07A9DB001B1465 /* api */,
 				E116CA4D2A05FB2B0071FE22 /* API.swift */,
 			);
 			path = remote;
@@ -237,6 +242,14 @@
 				E1334A8F285825F800845413 /* CALayerEx.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		E13FA4D22A07A9DB001B1465 /* api */ = {
+			isa = PBXGroup;
+			children = (
+				E13FA4D32A07A9F0001B1465 /* WeatherAPI.swift */,
+			);
+			path = api;
 			sourceTree = "<group>";
 		};
 		E1F3A2B42854D54D0029A23D /* Model */ = {
@@ -285,6 +298,7 @@
 				E11604892854701100977EF5 /* Sources */,
 				E116048A2854701100977EF5 /* Frameworks */,
 				E116048B2854701100977EF5 /* Resources */,
+				AC76A73436D0517DA0BE75BC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -303,7 +317,6 @@
 				E116049F2854701500977EF5 /* Sources */,
 				E11604A02854701500977EF5 /* Frameworks */,
 				E11604A12854701500977EF5 /* Resources */,
-				8286C4B05132078428162962 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -323,6 +336,7 @@
 				E11604A92854701500977EF5 /* Sources */,
 				E11604AA2854701500977EF5 /* Frameworks */,
 				E11604AB2854701500977EF5 /* Resources */,
+				D982AA91E9D6C89D525D7AA9 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -448,23 +462,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8286C4B05132078428162962 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboardingTests/Pods-wanted_pre_onboardingTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboardingTests/Pods-wanted_pre_onboardingTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboardingTests/Pods-wanted_pre_onboardingTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8ED42F34D961647DCEFBA0BD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -487,6 +484,40 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		AC76A73436D0517DA0BE75BC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding/Pods-wanted_pre_onboarding-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding/Pods-wanted_pre_onboarding-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding/Pods-wanted_pre_onboarding-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D982AA91E9D6C89D525D7AA9 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests/Pods-wanted_pre_onboarding-wanted_pre_onboardingUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -495,6 +526,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E1334A922858DE8A00845413 /* SpinnerViewController.swift in Sources */,
+				E13FA4D42A07A9F0001B1465 /* WeatherAPI.swift in Sources */,
 				E1F3A2B62854D59E0029A23D /* WeatherInformation.swift in Sources */,
 				E11604952854701100977EF5 /* WeatherViewController.swift in Sources */,
 				E1334A8E28580FB500845413 /* UIImageViewEx.swift in Sources */,
@@ -679,6 +711,7 @@
 				DEVELOPMENT_TEAM = H84YUCF7F5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = wanted_pre_onboarding/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = wanted_pre_onboarding;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -710,6 +743,7 @@
 				DEVELOPMENT_TEAM = H84YUCF7F5;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = wanted_pre_onboarding/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = wanted_pre_onboarding;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;

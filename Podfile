@@ -6,12 +6,13 @@ target 'wanted_pre_onboarding' do
   use_frameworks!
 
   # Pods for wanted_pre_onboarding
+    pod 'RxSwift', '6.5.0'
+    pod 'RxCocoa', '6.5.0'
+    pod 'Alamofire'
 
   target 'wanted_pre_onboardingTests' do
     inherit! :search_paths
     # Pods for testing
-    pod 'RxSwift', '6.5.0'
-    pod 'RxCocoa', '6.5.0'
   end
 
   target 'wanted_pre_onboardingUITests' do

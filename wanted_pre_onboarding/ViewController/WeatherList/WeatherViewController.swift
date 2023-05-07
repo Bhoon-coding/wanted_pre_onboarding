@@ -7,6 +7,8 @@
 
 import UIKit
 
+import RxSwift
+
 final class WeatherViewController: UIViewController {
     
     // MARK: - Properties
@@ -16,6 +18,7 @@ final class WeatherViewController: UIViewController {
     private var weatherOfCity: [WeatherInformation] = []
     
     let spinner = SpinnerViewController()
+    let disposeBag = DisposeBag()
     
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -86,20 +89,34 @@ final class WeatherViewController: UIViewController {
         let workGroup = DispatchGroup()
         let defaultQueue = DispatchQueue.main
         
-        cities.forEach { city in
-            workGroup.enter()
-            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
-                switch response {
-                case .success(let weatherData):
-                    workingQueue.async(group: workGroup) {
-                        self.weatherOfCity.append(weatherData)
-                        workGroup.leave()
-                    }
-                case .failure(let error):
-                    print("current weather response failure: \(error.localizedDescription)")
+        cities.forEach {
+            WeatherService()
+                .fetchWeathers(cityName: $0)
+                .observe(on: MainScheduler.instance)
+                .subscribe { [weak self] weather in
+                    self?.weatherOfCity.append(weather)
+                    self?.weatherCollectionView.reloadData()
+                    self?.removeSpinnerView()
                 }
-            }
+                .disposed(by: disposeBag)
+                
         }
+            
+        
+//        cities.forEach { city in
+//            workGroup.enter()
+//            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
+//                switch response {
+//                case .success(let weatherData):
+//                    workingQueue.async(group: workGroup) {
+//                        self.weatherOfCity.append(weatherData)
+//                        workGroup.leave()
+//                    }
+//                case .failure(let error):
+//                    print("current weather response failure: \(error.localizedDescription)")
+//                }
+//            }
+//        }
         
         workGroup.notify(queue: defaultQueue) {
             self.weatherCollectionView.reloadData()
