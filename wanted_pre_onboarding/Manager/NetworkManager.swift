@@ -33,12 +33,13 @@ struct NetworkManager {
                                     path: String,
                                     method: HTTPMethod = .get,
                                     header: HTTPHeaders? = nil
-    ) -> Single<R> {
+    ) -> Observable<R> {
         
-        Single<R>.create { observer in
+        Observable<R>.create { observer in
             // TODO: [] path 작업중
             guard let url = URL(string: host + path) else {
-                observer(.failure(NetworkError.invalidURL))
+                observer.onError(NetworkError.invalidURL)
+//                observer(.failure(NetworkError.invalidURL))
                 return Disposables.create()
             }
             
@@ -55,15 +56,17 @@ struct NetworkManager {
                     
                     switch response.result {
                     case let .failure(afError):
-                        print("Error: \(afError)")
-                        print("responseBody: \(responseBodyString)")
-                        observer(.failure(afError))
+//                        print("Error: \(afError)")
+//                        print("responseBody: \(responseBodyString)")
+                        observer.onError(afError)
+//                        observer(.failure(afError))
                         return
                         
                     case let .success(response):
-                        print("Response")
-                        print("responseBody: \(responseBodyString)")
-                        observer(.success(response))
+//                        print("Response")
+//                        print("responseBody: \(responseBodyString)")
+                        observer.onNext(response)
+//                        observer(.success(response))
                     }
                 }
             return Disposables.create {

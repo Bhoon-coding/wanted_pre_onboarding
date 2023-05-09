@@ -7,18 +7,17 @@
 
 import UIKit
 
-import RxSwift
+
 
 final class WeatherViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let cities = ["gongju", "gwangju", "gumi", "gunsan", "daegu", "daejeon", "mokpo", "busan", "seosan", "seoul", "sokcho", "suwon", "suncheon", "ulsan", "iksan", "jeonju", "jeju", "cheonan", "cheongju", "chuncheon"]
-    
-    private var weatherOfCity: [WeatherInformation] = []
+//    private var weatherOfCity: [WeatherInformation] = []
     
     let spinner = SpinnerViewController()
-    let disposeBag = DisposeBag()
+    let viewModel = WeatherViewModel()
+    
     
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -39,11 +38,23 @@ final class WeatherViewController: UIViewController {
         configureUI()
         configureCollectionView()
         createSpinnerView()
-        getCurrentWeather(cities: cities)
+        viewModel.getCurrentWeather(cities: viewModel.cities)
+        bindUI()
+//        getCurrentWeather(cities: cities)
         
     }
     
     // MARK: - Methods
+    
+    private func bindUI() {
+        viewModel.isLoading.subscribe(onNext: { [weak self] bool in
+            print("=================== \(#function) bool: \(bool) ===================")
+            
+            bool ? self?.createSpinnerView() : self?.removeSpinnerView()
+        })
+        
+    }
+
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .systemTeal
@@ -83,46 +94,46 @@ final class WeatherViewController: UIViewController {
         spinner.removeFromParent()
     }
     
-    private func getCurrentWeather(cities: [String]) {
-        
-        let workingQueue = DispatchQueue(label: "workingQueue", attributes: .concurrent)
-        let workGroup = DispatchGroup()
-        let defaultQueue = DispatchQueue.main
-        
-        cities.forEach {
-            WeatherService()
-                .fetchWeathers(cityName: $0)
-                .observe(on: MainScheduler.instance)
-                .subscribe { [weak self] weather in
-                    self?.weatherOfCity.append(weather)
-                    self?.weatherCollectionView.reloadData()
-                    self?.removeSpinnerView()
-                }
-                .disposed(by: disposeBag)
-                
-        }
-            
-        
-//        cities.forEach { city in
-//            workGroup.enter()
-//            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
-//                switch response {
-//                case .success(let weatherData):
-//                    workingQueue.async(group: workGroup) {
-//                        self.weatherOfCity.append(weatherData)
-//                        workGroup.leave()
-//                    }
-//                case .failure(let error):
-//                    print("current weather response failure: \(error.localizedDescription)")
+//    private func getCurrentWeather(cities: [String]) {
+//
+//        let workingQueue = DispatchQueue(label: "workingQueue", attributes: .concurrent)
+//        let workGroup = DispatchGroup()
+//        let defaultQueue = DispatchQueue.main
+//
+//        cities.forEach {
+//            WeatherService()
+//                .fetchWeathers(cityName: $0)
+//                .observe(on: MainScheduler.instance)
+//                .subscribe { [weak self] weather in
+//                    self?.weatherOfCity.append(weather)
+//                    self?.weatherCollectionView.reloadData()
+//                    self?.removeSpinnerView()
 //                }
-//            }
+//                .disposed(by: disposeBag)
+//
 //        }
-        
-        workGroup.notify(queue: defaultQueue) {
-            self.weatherCollectionView.reloadData()
-            self.removeSpinnerView()
-        }
-    }
+//
+//
+////        cities.forEach { city in
+////            workGroup.enter()
+////            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
+////                switch response {
+////                case .success(let weatherData):
+////                    workingQueue.async(group: workGroup) {
+////                        self.weatherOfCity.append(weatherData)
+////                        workGroup.leave()
+////                    }
+////                case .failure(let error):
+////                    print("current weather response failure: \(error.localizedDescription)")
+////                }
+////            }
+////        }
+//
+//        workGroup.notify(queue: defaultQueue) {
+//            self.weatherCollectionView.reloadData()
+//            self.removeSpinnerView()
+//        }
+//    }
     
     // MARK: - @objc
     
@@ -133,13 +144,13 @@ final class WeatherViewController: UIViewController {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return weatherOfCity.count
+        return viewModel.weatherOfCity.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as? WeatherCollectionViewCell else { return WeatherCollectionViewCell() }
         
-        cell.configureCell(weatherOfCity: weatherOfCity[indexPath.row])
+        cell.configureCell(weatherOfCity: viewModel.weatherOfCity[indexPath.row])
         
         return cell
     }
@@ -148,7 +159,7 @@ extension WeatherViewController: UICollectionViewDataSource {
 extension WeatherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let weatherInformation = weatherOfCity[indexPath.row]
+        let weatherInformation = viewModel.weatherOfCity[indexPath.row]
         let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
         let backBarButtonItem = UIBarButtonItem(title: "",
                                                 style: .plain,
