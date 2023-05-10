@@ -49,8 +49,13 @@ final class WeatherViewController: UIViewController {
     private func bindUI() {
         viewModel.isLoading.subscribe(onNext: { [weak self] bool in
             print("=================== \(#function) bool: \(bool) ===================")
+            if bool {
+                self?.createSpinnerView()
+            } else {
+                self?.removeSpinnerView()
+                self?.weatherCollectionView.reloadData()
+            }
             
-            bool ? self?.createSpinnerView() : self?.removeSpinnerView()
         })
         
     }
@@ -144,13 +149,13 @@ final class WeatherViewController: UIViewController {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewModel.weatherOfCity.count
+        return viewModel.weatherOfCity.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeatherCollectionViewCell.identifier, for: indexPath) as? WeatherCollectionViewCell else { return WeatherCollectionViewCell() }
         
-        cell.configureCell(weatherOfCity: viewModel.weatherOfCity[indexPath.row])
+        cell.configureCell(weatherOfCity: viewModel.weatherOfCity.value[indexPath.row])
         
         return cell
     }
@@ -159,7 +164,7 @@ extension WeatherViewController: UICollectionViewDataSource {
 extension WeatherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let weatherInformation = viewModel.weatherOfCity[indexPath.row]
+        let weatherInformation = viewModel.weatherOfCity.value[indexPath.row]
         let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
         let backBarButtonItem = UIBarButtonItem(title: "",
                                                 style: .plain,

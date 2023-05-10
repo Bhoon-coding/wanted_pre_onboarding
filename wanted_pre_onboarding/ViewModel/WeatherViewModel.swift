@@ -8,6 +8,7 @@
 import Foundation
 
 import RxSwift
+import RxCocoa
 
 class WeatherViewModel {
     
@@ -33,7 +34,9 @@ class WeatherViewModel {
                   "chuncheon"]
     
     // TODO: [] <#할일#>
-    var weatherOfCity = BehaviorSubject<[WeatherInformation]>(value: [])
+    // WeatherViewModel
+//    var weatherOfCity = BehaviorSubject<[WeatherInformation]>(value: [])
+    var weatherOfCity = BehaviorRelay<[WeatherInformation]>(value: [])
 //    var weatherOfCity: [WeatherInformation] = []
     var isLoading = BehaviorSubject<Bool>(value: false)
     let disposeBag = DisposeBag()
@@ -46,7 +49,8 @@ class WeatherViewModel {
         Observable.zip(observables)
             .observe(on: MainScheduler.instance)
             .subscribe { [weak self] weathers in
-                self?.weatherOfCity.onNext(weathers)
+                self?.weatherOfCity.accept(weathers)
+//                self?.weatherOfCity.onNext(weathers)
                 self?.isLoading.onNext(false) /// 질문: 이런상황이면 Subject를 쓰나? 일반 true, false로도 해도 될것같은데
             }
             .disposed(by: disposeBag)
