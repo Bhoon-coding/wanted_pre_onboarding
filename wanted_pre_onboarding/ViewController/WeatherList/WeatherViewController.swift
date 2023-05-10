@@ -7,17 +7,9 @@
 
 import UIKit
 
-
-
 final class WeatherViewController: UIViewController {
     
     // MARK: - Properties
-    
-//    private var weatherOfCity: [WeatherInformation] = []
-    
-    let spinner = SpinnerViewController()
-    let viewModel = WeatherViewModel()
-    
     
     private lazy var weatherCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,45 +21,51 @@ final class WeatherViewController: UIViewController {
         return collecionView
     }()
     
+    let spinner = SpinnerViewController()
+    let viewModel = WeatherViewModel()
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureNavigationBar()
         configureUI()
-        configureCollectionView()
-        createSpinnerView()
-        viewModel.getCurrentWeather(cities: viewModel.cities)
         bindUI()
-//        getCurrentWeather(cities: cities)
         
+        viewModel.getCurrentWeather(cities: viewModel.cities)
     }
     
     // MARK: - Methods
     
     private func bindUI() {
-        viewModel.isLoading.subscribe(onNext: { [weak self] bool in
-            print("=================== \(#function) bool: \(bool) ===================")
-            if bool {
+        viewModel.isLoading.bind(onNext: { [weak self] isLoading in
+            if isLoading {
                 self?.createSpinnerView()
             } else {
                 self?.removeSpinnerView()
                 self?.weatherCollectionView.reloadData()
             }
-            
         })
+    }
+    
+    private func configureUI() {
+        configureNavigationBar()
+        configureCollectionView()
+        
+        view.backgroundColor = .systemTeal
+        
         
     }
-
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.barTintColor = .systemTeal
     }
     
-    private func configureUI() {
-        
-        view.backgroundColor = .systemTeal
+    private func configureCollectionView() {
+        weatherCollectionView.dataSource = self
+        weatherCollectionView.delegate = self
+        weatherCollectionView.register(WeatherCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
         
         [weatherCollectionView].forEach { view.addSubview($0) }
         
@@ -77,13 +75,6 @@ final class WeatherViewController: UIViewController {
             weatherCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             weatherCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         ])
-    }
-    
-    private func configureCollectionView() {
-        weatherCollectionView.dataSource = self
-        weatherCollectionView.delegate = self
-        weatherCollectionView.register(WeatherCollectionViewCell.self,
-                                       forCellWithReuseIdentifier: WeatherCollectionViewCell.identifier)
     }
     
     private func createSpinnerView() {
@@ -98,50 +89,7 @@ final class WeatherViewController: UIViewController {
         spinner.view.removeFromSuperview()
         spinner.removeFromParent()
     }
-    
-//    private func getCurrentWeather(cities: [String]) {
-//
-//        let workingQueue = DispatchQueue(label: "workingQueue", attributes: .concurrent)
-//        let workGroup = DispatchGroup()
-//        let defaultQueue = DispatchQueue.main
-//
-//        cities.forEach {
-//            WeatherService()
-//                .fetchWeathers(cityName: $0)
-//                .observe(on: MainScheduler.instance)
-//                .subscribe { [weak self] weather in
-//                    self?.weatherOfCity.append(weather)
-//                    self?.weatherCollectionView.reloadData()
-//                    self?.removeSpinnerView()
-//                }
-//                .disposed(by: disposeBag)
-//
-//        }
-//
-//
-////        cities.forEach { city in
-////            workGroup.enter()
-////            NetworkManager.shared.fetchCurrentWeather(cityName: city) { (response) in
-////                switch response {
-////                case .success(let weatherData):
-////                    workingQueue.async(group: workGroup) {
-////                        self.weatherOfCity.append(weatherData)
-////                        workGroup.leave()
-////                    }
-////                case .failure(let error):
-////                    print("current weather response failure: \(error.localizedDescription)")
-////                }
-////            }
-////        }
-//
-//        workGroup.notify(queue: defaultQueue) {
-//            self.weatherCollectionView.reloadData()
-//            self.removeSpinnerView()
-//        }
-//    }
-    
     // MARK: - @objc
-    
     
 }
 
