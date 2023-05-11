@@ -24,6 +24,7 @@
 		E1334A8E28580FB500845413 /* UIImageViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A8D28580FB500845413 /* UIImageViewEx.swift */; };
 		E1334A90285825F800845413 /* CALayerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A8F285825F800845413 /* CALayerEx.swift */; };
 		E1334A922858DE8A00845413 /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1334A912858DE8A00845413 /* SpinnerViewController.swift */; };
+		E134C1EC2A0C6979006C230E /* WeatherDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E134C1EB2A0C6979006C230E /* WeatherDetailView.swift */; };
 		E13FA4D42A07A9F0001B1465 /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13FA4D32A07A9F0001B1465 /* WeatherAPI.swift */; };
 		E13FA4D72A08F06D001B1465 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13FA4D62A08F06D001B1465 /* WeatherViewModel.swift */; };
 		E1D06B24285AD18E00C18393 /* ImageCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D06B23285AD18E00C18393 /* ImageCacheManager.swift */; };
@@ -77,6 +78,7 @@
 		E1334A8D28580FB500845413 /* UIImageViewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageViewEx.swift; sourceTree = "<group>"; };
 		E1334A8F285825F800845413 /* CALayerEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerEx.swift; sourceTree = "<group>"; };
 		E1334A912858DE8A00845413 /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		E134C1EB2A0C6979006C230E /* WeatherDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDetailView.swift; sourceTree = "<group>"; };
 		E13FA4D32A07A9F0001B1465 /* WeatherAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
 		E13FA4D62A08F06D001B1465 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		E1D06B23285AD18E00C18393 /* ImageCacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCacheManager.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				E12FE1D72856E07F0046659E /* WeatherDetailViewController.swift */,
+				E134C1EB2A0C6979006C230E /* WeatherDetailView.swift */,
 			);
 			path = WeatherDetail;
 			sourceTree = "<group>";
@@ -536,6 +539,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E134C1EC2A0C6979006C230E /* WeatherDetailView.swift in Sources */,
 				E1334A922858DE8A00845413 /* SpinnerViewController.swift in Sources */,
 				E13FA4D42A07A9F0001B1465 /* WeatherAPI.swift in Sources */,
 				E1F3A2B62854D59E0029A23D /* WeatherInformation.swift in Sources */,
