@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeatherDetailView: UIView {
+final class WeatherDetailView: UIView {
     
     let weatherInfo: WeatherInformation
     

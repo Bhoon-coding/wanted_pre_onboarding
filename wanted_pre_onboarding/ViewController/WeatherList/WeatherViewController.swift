@@ -28,10 +28,8 @@ final class WeatherViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureUI()
         bindUI()
-        
         viewModel.getCurrentWeather(cities: viewModel.cities)
     }
     
@@ -49,12 +47,9 @@ final class WeatherViewController: UIViewController {
     }
     
     private func configureUI() {
+        view.backgroundColor = .systemTeal
         configureNavigationBar()
         configureCollectionView()
-        
-        view.backgroundColor = .systemTeal
-        
-        
     }
     
     private func configureNavigationBar() {
@@ -112,8 +107,8 @@ extension WeatherViewController: UICollectionViewDataSource {
 extension WeatherViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let weatherInformation = viewModel.weatherOfCity.value[indexPath.row]
-        let weatherDetailVC = WeatherDetailViewController(weatherInformation: weatherInformation)
+        let weatherInfo = viewModel.weatherOfCity.value[indexPath.row]
+        let weatherDetailVC = WeatherDetailViewController(weatherInfo: weatherInfo)
         let backBarButtonItem = UIBarButtonItem(title: "",
                                                 style: .plain,
                                                 target: self,
