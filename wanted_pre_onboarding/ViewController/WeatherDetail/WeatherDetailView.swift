@@ -194,8 +194,6 @@ class WeatherDetailView: UIView {
     init(weatherInfo: WeatherInformation) {
         self.weatherInfo = weatherInfo
         super.init(frame: .zero)
-        tempWrapper.layer.addBorder([.top], color: .white, width: 1.0)
-        etcHorizontalWrapper.layer.addBorder([.top], color: .white, width: 1.0)
         configureUI()
     }
     
@@ -206,6 +204,7 @@ class WeatherDetailView: UIView {
     // MARK: - Methods
     
     private func configureUI() {
+        self.backgroundColor = .systemTeal
     
         [wholeWrapper,
          weatherIconImageView,
@@ -244,6 +243,8 @@ class WeatherDetailView: UIView {
          humidityStackView].forEach {
             etcHorizontalWrapper.addArrangedSubview($0)
         }
+        
+        // MARK: - Constraints
         
         NSLayoutConstraint.activate([
             wholeWrapper.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor),
@@ -322,6 +323,8 @@ class WeatherDetailView: UIView {
             humidityImageView.heightAnchor.constraint(equalToConstant: 40)
         ])
         
+        tempWrapper.addBorder([.top], color: .white, height: 1.0)
+        etcHorizontalWrapper.addBorder([.top], color: .white, height: 1.0)
     }
 
 }
