@@ -7,9 +7,7 @@
 
 import UIKit
 
-final class WeatherDetailView: UIView {
-    
-    let weatherInfo: WeatherInformation
+class WeatherDetailView: UIView {
     
     // MARK: - UIProperties
     
@@ -187,14 +185,18 @@ final class WeatherDetailView: UIView {
         return label
     }()
     
+    // MARK: - Properties
+    
+    let weatherInfo: WeatherInformation
     
     // MARK: - LifeCycle
     
     init(weatherInfo: WeatherInformation) {
         self.weatherInfo = weatherInfo
-        super.init()
+        super.init(frame: .zero)
         tempWrapper.layer.addBorder([.top], color: .white, width: 1.0)
         etcHorizontalWrapper.layer.addBorder([.top], color: .white, width: 1.0)
+        configureUI()
     }
     
     required init?(coder: NSCoder) {
@@ -204,7 +206,6 @@ final class WeatherDetailView: UIView {
     // MARK: - Methods
     
     private func configureUI() {
-        self.backgroundColor = .systemTeal
     
         [wholeWrapper,
          weatherIconImageView,

@@ -9,7 +9,6 @@ import Foundation
 
 import Alamofire
 import RxSwift
-import RxCocoa
 
 extension Data.Version {
     struct Weather: APIDefinition {

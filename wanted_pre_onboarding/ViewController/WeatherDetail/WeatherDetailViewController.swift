@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class WeatherDetailViewController: UIViewController {
+class WeatherDetailViewController: UIViewController {
     
     private let weatherInfo: WeatherInformation
     private let weatherDetailView: WeatherDetailView
@@ -15,7 +15,7 @@ final class WeatherDetailViewController: UIViewController {
     init(weatherInfo: WeatherInformation) {
         self.weatherInfo = weatherInfo
         self.weatherDetailView = WeatherDetailView(weatherInfo: weatherInfo)
-        super.init()
+        super.init(nibName: nil, bundle: nil) // 스토리보드를 안썼는데 왜..?
     }
     
     required init?(coder: NSCoder) {
