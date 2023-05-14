@@ -10,11 +10,6 @@ import Foundation
 import Alamofire
 import RxSwift
 
-private enum WeatherAPI {
-    
-//    static let baseURL = "https://api.openweathermap.org/"
-}
-
 struct NetworkManager {
     static let shared = NetworkManager()
     
@@ -33,12 +28,12 @@ struct NetworkManager {
                                     path: String,
                                     method: HTTPMethod = .get,
                                     header: HTTPHeaders? = nil
-    ) -> Single<R> {
+    ) -> Observable<R> {
         
-        Single<R>.create { observer in
+        Observable<R>.create { observer in
             // TODO: [] path 작업중
             guard let url = URL(string: host + path) else {
-                observer(.failure(NetworkError.invalidURL))
+                observer.onError(NetworkError.invalidURL)
                 return Disposables.create()
             }
             
@@ -55,15 +50,17 @@ struct NetworkManager {
                     
                     switch response.result {
                     case let .failure(afError):
-                        print("Error: \(afError)")
-                        print("responseBody: \(responseBodyString)")
-                        observer(.failure(afError))
+//                        print("Error: \(afError)")
+//                        print("responseBody: \(responseBodyString)")
+                        observer.onError(afError)
+//                        observer(.failure(afError))
                         return
                         
                     case let .success(response):
-                        print("Response")
-                        print("responseBody: \(responseBodyString)")
-                        observer(.success(response))
+//                        print("Response")
+//                        print("responseBody: \(responseBodyString)")
+                        observer.onNext(response)
+//                        observer(.success(response))
                     }
                 }
             return Disposables.create {
@@ -71,22 +68,6 @@ struct NetworkManager {
             }
         }
     }
-    
-//    func fetchCurrentWeather(cityName: String,
-//                             completion: @escaping (Result<WeatherInformation, Error>) -> ()
-//    ) {
-//        guard let url = URL(string: APICommon.host + "/data/2.5/weather?q=\(cityName)&appid=\(Constants.weatherApiKey)&lang=KR") else { return }
-//        let session = URLSession(configuration: .default)
-//        session.dataTask(with: url) { data, response, error in
-//            guard let data = data, error == nil else { return }
-//            let decoder = JSONDecoder()
-//
-//            guard let weatherInformation = try? decoder.decode(WeatherInformation.self, from: data)
-//             else { return }
-//            completion(.success(weatherInformation))
-//        }.resume()
-//
-//    }
 }
 
 

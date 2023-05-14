@@ -7,224 +7,54 @@
 
 import UIKit
 
-final class WeatherDetailViewController: UIViewController {
+class WeatherDetailViewController: UIViewController {
     
-    // MARK: - Properties
-    
-    let weatherInformation: WeatherInformation
-
-    init(weatherInformation: WeatherInformation) {
-        self.weatherInformation = weatherInformation
-
-        super.init(nibName: nil, bundle: nil)
+    private let weatherInfo: WeatherInformation
+    private let weatherDetailView: WeatherDetailView
+        
+    init(weatherInfo: WeatherInformation) {
+        self.weatherInfo = weatherInfo
+        self.weatherDetailView = WeatherDetailView(weatherInfo: weatherInfo)
+        super.init(nibName: nil, bundle: nil) // 스토리보드를 안썼는데 왜..?
+        ///코드로 구현했더라도 UIViewController를 초기화하는 과정에서. nibName, bundle을 사용하지않는다고 명시해야 하기 때문에 nibName, bundle 둘다 nil로 설정해 코드로 구현한 UI를 로드되게 함.
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // MARK: - UIProperties
-    
-    private lazy var wholeWrapper: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var weatherIconImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var descriptionLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 20)
-        label.textColor = .white
-        label.text = weatherInformation.weather.first?.description
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private let tempWrapper: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    private lazy var currentTempLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 60)
-        label.textColor = .white
-        label.text = "\(Int(weatherInformation.temp.temp - 273.15))°"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var maxTempLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(WeatherString.highestTemp)  \(Int(weatherInformation.temp.tempMax - 273.15))°"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var minTempLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(WeatherString.lowestTemp)  \(Int(weatherInformation.temp.tempMin - 273.15))°"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var feelTempLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(WeatherString.feelTemp)  \(Int(weatherInformation.temp.feelsLike - 273.15))°"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var etcHorizontalWrapper: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 8
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var pressureStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 8
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var pressureTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        label.text = "\(WeatherString.pressure)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var pressureImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "\(WeatherString.Images.pressure)")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var pressureDetailLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(weatherInformation.temp.pressure) \(WeatherString.Units.pressure)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var windStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 8
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var windTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        label.text = "\(WeatherString.wind)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var windImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "\(WeatherString.Images.wind)")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var windDetailLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(Int(weatherInformation.wind.speed)) \(WeatherString.Units.wind)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var humidityStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.spacing = 8
-        stackView.distribution = .fillEqually
-        stackView.axis = .vertical
-        stackView.alignment = .center
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
-    private lazy var humidityTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = .white
-        label.text = "\(WeatherString.humidity)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private lazy var humidityImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.tintColor = .white
-        imageView.image = UIImage(systemName: "\(WeatherString.Images.humidity)")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
-    private lazy var humidityDetailLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "\(weatherInformation.temp.humidity)\(WeatherString.Units.humidity)"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     // MARK: - LifeCycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureNavigationBar()
-        configureUI()
+        configureWeatherDetailViewUI()
         updateWeatherImage()
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tempWrapper.layer.addBorder([.top], color: .white, width: 1.0)
-        etcHorizontalWrapper.layer.addBorder([.top], color: .white, width: 1.0)
     }
     
     // MARK: - Methods
     
     private func configureNavigationBar() {
         navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: UIColor.white]
-        title = "\(weatherInformation.name)"
+        title = "\(weatherInfo.name)"
+    }
+    
+    private func configureWeatherDetailViewUI() {
+        weatherDetailView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(weatherDetailView)
+        
+        NSLayoutConstraint.activate([
+            weatherDetailView.topAnchor.constraint(equalTo: view.topAnchor),
+            weatherDetailView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            weatherDetailView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            weatherDetailView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        ])
     }
     
     private func updateWeatherImage() {
-        guard let iconCode = weatherInformation.weather.first?.icon else { return }
+        guard let iconCode = weatherInfo.weather.first?.icon else { return }
         let iconUrl = "http://openweathermap.org/img/wn/\(iconCode)@2x.png"
-        weatherIconImageView.load(urlString: iconUrl)
+        weatherDetailView.weatherIconImageView.load(urlString: iconUrl)
     }
     
     // MARK: - @objc
@@ -234,147 +64,5 @@ final class WeatherDetailViewController: UIViewController {
 // MARK: - Extensions
 
 extension WeatherDetailViewController {
-    private func configureUI() {
-        view.backgroundColor = .systemTeal
     
-        [wholeWrapper,
-         weatherIconImageView,
-         tempWrapper,
-         descriptionLabel,
-         currentTempLabel,
-         maxTempLabel,
-         minTempLabel,
-         feelTempLabel,
-         etcHorizontalWrapper,
-         pressureStackView,
-         windStackView,
-         humidityStackView
-        ].forEach { view.addSubview($0) }
-        
-        [pressureTitleLabel,
-         pressureImageView,
-         pressureDetailLabel].forEach {
-            pressureStackView.addArrangedSubview($0)
-        }
-        
-        [windTitleLabel,
-         windImageView,
-         windDetailLabel].forEach {
-            windStackView.addArrangedSubview($0)
-        }
-        
-        [humidityTitleLabel,
-         humidityImageView,
-         humidityDetailLabel].forEach {
-            humidityStackView.addArrangedSubview($0)
-        }
-        
-        [pressureStackView,
-         windStackView,
-         humidityStackView].forEach {
-            etcHorizontalWrapper.addArrangedSubview($0)
-        }
-        
-        NSLayoutConstraint.activate([
-            wholeWrapper.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            wholeWrapper.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            wholeWrapper.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            wholeWrapper.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40)
-        ])
-        
-        NSLayoutConstraint.activate([
-            weatherIconImageView.topAnchor.constraint(equalTo: wholeWrapper.safeAreaLayoutGuide.topAnchor, constant: 24),
-            weatherIconImageView.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
-            weatherIconImageView.widthAnchor.constraint(equalToConstant: 160),
-            weatherIconImageView.heightAnchor.constraint(equalToConstant: 140)
-        ])
-        
-        NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: weatherIconImageView.bottomAnchor, constant: 8),
-            descriptionLabel.centerXAnchor.constraint(equalTo: weatherIconImageView.centerXAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            tempWrapper.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 24),
-            tempWrapper.centerXAnchor.constraint(equalTo: wholeWrapper.centerXAnchor),
-            tempWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
-            tempWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
-            tempWrapper.heightAnchor.constraint(equalToConstant: 120)
-        ])
-        
-        NSLayoutConstraint.activate([
-            currentTempLabel.leadingAnchor.constraint(equalTo: tempWrapper.leadingAnchor, constant: 56),
-            currentTempLabel.centerYAnchor.constraint(equalTo: tempWrapper.centerYAnchor),
-            
-        ])
-        
-        NSLayoutConstraint.activate([
-            maxTempLabel.topAnchor.constraint(equalTo: tempWrapper.topAnchor, constant: 24),
-            maxTempLabel.trailingAnchor.constraint(equalTo: tempWrapper.trailingAnchor, constant: -56)
-        ])
-        
-        NSLayoutConstraint.activate([
-            minTempLabel.bottomAnchor.constraint(equalTo: tempWrapper.bottomAnchor, constant: -24),
-            minTempLabel.trailingAnchor.constraint(equalTo: tempWrapper.trailingAnchor, constant: -56)
-        ])
-        
-        NSLayoutConstraint.activate([
-            feelTempLabel.topAnchor.constraint(equalTo: tempWrapper.bottomAnchor),
-            feelTempLabel.centerXAnchor.constraint(equalTo: tempWrapper.centerXAnchor)
-        ])
-        
-        NSLayoutConstraint.activate([
-            etcHorizontalWrapper.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
-            etcHorizontalWrapper.trailingAnchor.constraint(equalTo: wholeWrapper.trailingAnchor),
-            etcHorizontalWrapper.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 24),
-            etcHorizontalWrapper.heightAnchor.constraint(equalToConstant: 140)
-        ])
-        
-        NSLayoutConstraint.activate([
-            pressureStackView.leadingAnchor.constraint(equalTo: wholeWrapper.leadingAnchor),
-            pressureStackView.topAnchor.constraint(equalTo: feelTempLabel.bottomAnchor, constant: 40),
-            pressureStackView.widthAnchor.constraint(equalToConstant: 80),
-            pressureStackView.heightAnchor.constraint(equalToConstant: 140)
-        ])
-        
-        NSLayoutConstraint.activate([
-            pressureImageView.widthAnchor.constraint(equalToConstant: 40),
-            pressureImageView.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        NSLayoutConstraint.activate([
-            windImageView.widthAnchor.constraint(equalToConstant: 40),
-            windImageView.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-        NSLayoutConstraint.activate([
-            humidityImageView.widthAnchor.constraint(equalToConstant: 40),
-            humidityImageView.heightAnchor.constraint(equalToConstant: 40)
-        ])
-        
-    }
-}
-
-
-// MARK: - NameSpaces
-
-private enum WeatherString {
-    static let highestTemp = "최고"
-    static let lowestTemp = "최저"
-    static let feelTemp = "체감"
-    static let pressure = "기압"
-    static let wind = "풍속"
-    static let humidity = "습도"
-    
-    enum Images {
-        static let pressure = "dial.max"
-        static let wind = "wind"
-        static let humidity = "humidity.fill"
-    }
-    
-    enum Units {
-        static let pressure = "hpa"
-        static let wind = "m/s"
-        static let humidity = "%"
-    }
 }

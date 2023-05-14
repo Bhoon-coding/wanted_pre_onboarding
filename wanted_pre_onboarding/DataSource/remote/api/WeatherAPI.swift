@@ -9,7 +9,6 @@ import Foundation
 
 import Alamofire
 import RxSwift
-import RxCocoa
 
 extension Data.Version {
     struct Weather: APIDefinition {
@@ -29,7 +28,7 @@ extension Data.Version {
 }
 
 struct WeatherService {
-    func fetchWeathers(cityName: String) -> Single<WeatherInformation> {
+    func fetchWeathers(cityName: String) -> Observable<WeatherInformation> {
         Data.Version.Weather(cityName: cityName)
             .rx
             .request()
@@ -37,7 +36,7 @@ struct WeatherService {
 }
 
 extension Reactive where Base == Data.Version.Weather {
-    func request() -> Single<WeatherInformation> {
+    func request() -> Observable<WeatherInformation> {
         NetworkManager.request(path: base.path,
                                method: base.method,
                                header: base.headers)
